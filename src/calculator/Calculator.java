@@ -9,7 +9,7 @@ import java.util.Stack;
  * Program to calculate user expression
  *
  * @author Kyle
- * @version 1.0
+ * @version 1.1
  */
 public class Calculator implements ICalculator {
     /**
