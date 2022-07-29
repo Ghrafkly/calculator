@@ -1,6 +1,7 @@
 package calculator;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -271,64 +272,6 @@ public class Calculator implements ICalculator {
     }
 
     /**
-     * Converts a decimal to fraction
-     *
-     * @param decimal       Inputs a decimal
-     * @return              The fraction as an array splitting the whole, numerator & denominator
-     */
-    public long[] decimalToFraction(double decimal) {
-        long whole = 0;
-        long numerator;
-        long denominator;
-        long gCommonFactor;
-
-        /*
-         Converts the decimal to BigDecimal
-         Has to initially be converted to string to maintain parity
-         Otherwise BigDecimal can convert 2.1 to 2.100000000000000088817841970012523233890533447265625
-         Strip trailing zeros removes any extra zeros, and scale returns the number of decimal places
-        */
-        long decimalCheck = new BigDecimal(String.valueOf(decimal)).stripTrailingZeros().scale();
-        long fractionTimes = (long) pow(10, decimalCheck, 10, false);
-
-        numerator = (long) multiply(decimal, fractionTimes);
-        denominator = (long) multiply(1, fractionTimes);
-        gCommonFactor = gcf(numerator, denominator, 1, 0);
-
-        numerator = (long) divide(numerator, gCommonFactor);
-        denominator = (long) divide(denominator, gCommonFactor);
-
-        if (numerator > denominator) {
-            whole = (long) divide(numerator, denominator);
-            numerator = (long) subtract(numerator, multiply(denominator, whole));
-        }
-        return new long[]{whole, numerator, denominator};
-    }
-
-    /**
-     * Finds the root of a number
-     *
-     * @param radicand      Number whose root is being found
-     * @param root          Holding parameter, stores root values
-     * @param pow           The exponent of the root
-     * @param i             Iterator
-     * @return              Root of the radicand
-     */
-    public double sqrtA(double radicand, double root, int pow, int i) {
-        if (i <= pow+1) {
-            root = bisection(1, i, pow, 0);
-
-            if (root == radicand)
-                return i;
-
-            return root > radicand
-                    ? sqrtB(radicand, i - 1, i, pow)
-                    : sqrtA(radicand, root, pow, ++i);
-        }
-        return root;
-    }
-
-    /**
      * Add the temporary holding value to the array, then clears it
      *
      * @param arr       Array which contains values
@@ -427,6 +370,69 @@ public class Calculator implements ICalculator {
         return gCommonFactor;
     }
 
+
+    /**
+     * Converts a decimal to fraction
+     *
+     * @param decimal       Inputs a decimal
+     * @return              The fraction as an array splitting the whole, numerator & denominator
+     */
+    public long[] decimalToFraction(double decimal) {
+        long whole = 0;
+        int numerator;
+        int denominator;
+        int gCommonFactor;
+
+        /*
+         Converts the decimal to BigDecimal
+         Has to initially be converted to string to maintain parity
+         Otherwise BigDecimal can convert 2.1 to 2.100000000000000088817841970012523233890533447265625
+         Strip trailing zeros removes any extra zeros, and scale returns the number of decimal places
+        */
+
+        MathContext m = new MathContext(5);
+
+        long decimalCheck = new BigDecimal(String.valueOf(decimal)).stripTrailingZeros().round(m).scale();
+        long fractionTimes = (long) pow(10, decimalCheck, 10, false);
+
+        numerator = (int) multiply(decimal, fractionTimes);
+        denominator = (int) multiply(1, fractionTimes);
+        gCommonFactor = (int) gcf(numerator, denominator, 1, 0);
+
+        numerator = (int) divide(numerator, gCommonFactor);
+        denominator = (int) divide(denominator, gCommonFactor);
+
+        if (numerator > denominator) {
+            whole = (long) divide(numerator, denominator);
+            numerator = (int) subtract(numerator, multiply(denominator, whole));
+        }
+
+        return new long[]{whole, numerator, denominator};
+    }
+
+    /**
+     * Finds the root of a number
+     *
+     * @param radicand      Number whose root is being found
+     * @param root          Holding parameter, stores root values
+     * @param pow           The exponent of the root
+     * @param i             Iterator
+     * @return              Root of the radicand
+     */
+    public double sqrtA(double radicand, double root, int pow, int i) {
+        if (i <= pow+1) {
+            root = bisection(1, i, pow, 0);
+
+            if (root == radicand)
+                return i;
+
+            return root > radicand
+                    ? sqrtB(radicand, i - 1, i, pow)
+                    : sqrtA(radicand, root, pow, ++i);
+        }
+        return root;
+    }
+
     /**
      * Finds the root of a number that is a non-perfect square
      *
@@ -439,6 +445,10 @@ public class Calculator implements ICalculator {
     private double sqrtB(double radicand, double low, double high, int pow) {
         double root = 1;
         double mid = (low + high) / 2;
+
+//        BigDecimal bd = BigDecimal.valueOf(pow);
+//        MathContext m = new MathContext(5);
+//        pow = bd.round(m).intValue();
 
         root = bisection(root, mid, pow, 0);
 

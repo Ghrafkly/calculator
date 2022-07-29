@@ -413,4 +413,160 @@ public class TestCalculator {
         calculator.rpn(testArr, stack, output, 0);
         assertEquals(output.toString(), Arrays.toString(check));
     }
+
+    @Test
+    void test_basic_one_plus_one() {
+        double ans = calculator.evaluate("1+1");
+        assertEquals(2, ans);
+    }
+
+    @Test
+    void test_basic_one_minus_one() {
+        double ans = calculator.evaluate("1-1");
+        assertEquals(0, ans);
+    }
+
+    @Test
+    void test_basic_one_divide_one() {
+        double ans = calculator.evaluate("1/1");
+        assertEquals(1, ans);
+    }
+
+    @Test
+    void test_basic_one_times_one() {
+        double ans = calculator.evaluate("1*1");
+        assertEquals(1, ans);
+    }
+
+    @Test
+    void test_basic_zero_divide_one() {
+        double ans = calculator.evaluate("0/1");
+        assertEquals(0, ans);
+    }
+
+    @Test
+    void test_bodmas_one_plus_two_times_four() {
+        double ans = calculator.evaluate("1+2*4");
+        assertEquals(9, ans);
+    }
+
+    @Test
+    void test_bodmas_one_plus_two_divide_four() {
+        double ans = calculator.evaluate("1+2/4");
+        assertEquals(1.5, ans);
+    }
+
+    @Test
+    void test_brackets_two_plus_two_divide_four() {
+        double ans = calculator.evaluate("(2+2)/4");
+        assertEquals(1, ans);
+    }
+
+    @Test
+    void test_brackets_in_brackets_two_plus_two_divide_four_minus_1() {
+        double ans = calculator.evaluate("((2+2)/4)-1");
+        assertEquals(0, ans);
+    }
+
+    @Test
+    void test_negatives_negTwo_plus_negTwo() {
+        double ans = calculator.evaluate("-2+-1");
+        assertEquals(-3, ans);
+    }
+
+    @Test
+    void test_negatives_and_brackets_neg_two_plus_negTwo() {
+        double ans = calculator.evaluate("-(2+-1)");
+        assertEquals(-1, ans);
+    }
+
+    @Test
+    void test_power_two_three() {
+        double ans = calculator.evaluate("2^3");
+        assertEquals(8, ans);
+    }
+
+    @Test
+    void test_power_two_negThree() {
+        double ans = calculator.evaluate("2^-3");
+        assertEquals(0.125, ans);
+    }
+
+    @Test
+    void test_power_negTwo_three() {
+        double ans = calculator.evaluate("-2^3");
+        assertEquals(-8, ans);
+    }
+
+    @Test
+    void test_power_negTwo_negThree() {
+        double ans = calculator.evaluate("-2^-3");
+        assertEquals(-0.125, ans);
+    }
+
+    @Test
+    void test_power_four_pointFive() {
+        double ans = calculator.evaluate("4^0.5");
+        assertEquals(2, ans);
+    }
+
+    @Test
+    void test_power_four_negPointFive() {
+        double ans = calculator.evaluate("4^-0.5");
+        assertEquals(0.5, ans);
+    }
+
+    @Test
+    void test_power_negFour_pointFive() {
+        double ans = calculator.evaluate("-4^0.5");
+        assertEquals(-2, ans);
+    }
+
+    @Test
+    void test_power_negFour_negPointFive() {
+        double ans = calculator.evaluate("-4^-0.5");
+        assertEquals(-0.5, ans);
+    }
+
+    @Test
+    void test_power_pointFive_negPointFive() {
+        double ans = calculator.evaluate("0.5^-0.5");
+        assertEquals(1.4142120368572106, ans);
+    }
+
+    @Test
+    void test_basic_decimals_pointFive_plus_pointFive() {
+        double ans = calculator.evaluate("0.5+0.5");
+        assertEquals(1, ans);
+    }
+
+    @Test
+    void test_basic_decimals_pointFive_minus_pointFive() {
+        double ans = calculator.evaluate("0.5-0.5");
+        assertEquals(0, ans);
+    }
+
+    @Test
+    void test_basic_decimals_pointFive_multiply_pointFive() {
+        double ans = calculator.evaluate("0.5*0.5");
+        assertEquals(0.25, ans);
+    }
+
+    @Test
+    void test_basic_decimals_pointFive_divide_pointFive() {
+        double ans = calculator.evaluate("0.5/0.5");
+        assertEquals(1, ans);
+    }
+
+    @Test
+    void test_double_digits() {
+        double ans = calculator.evaluate("25+100");
+        assertEquals(125, ans);
+    }
+
+    @Test
+    void test_complex_expression() {
+        double ans = calculator.evaluate("-12-34*(-2.36--3.64)--76^3/(32*(-54+36))+4-7");
+        assertEquals(-820.6311111111111, ans);
+    }
 }
